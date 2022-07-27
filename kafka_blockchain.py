@@ -146,15 +146,13 @@ class KafkaBlockchain(object):
         """
         previous_hash = self.hash(self.blockchain[-1])
 
-        block = {
+        return {
             'index': len(self.blockchain) + 1,
             'timestamp': time(),
             'transactions': self.current_transactions,
             'proof': proof,
-            'previous_hash': previous_hash
+            'previous_hash': previous_hash,
         }
-
-        return block
 
     def new_transaction(self, sender, recipient, amount):
         self.current_transactions.append({
@@ -207,9 +205,7 @@ class KafkaBlockchain(object):
             return False
 
         # Check that the Proof of Work is correct
-        if not self.valid_proof(last_block['proof'], block['proof']):
-            return False
-        return True
+        return bool(self.valid_proof(last_block['proof'], block['proof']))
 
 
 if __name__ == "__main__":
